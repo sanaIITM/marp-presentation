@@ -1,0 +1,29 @@
+name: Build Marp presentation
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout your repo
+      - uses: actions/checkout@v3
+
+      # Build slides.md -> index.html
+      - uses: marp-team/marp-cli-action@v2
+        with:
+          markdown: slides.md
+          html: true
+          output: index.html
+
+      # Deploy ONLY the built file(s) to gh-pages
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
+          publish_branch: gh-pages
+
